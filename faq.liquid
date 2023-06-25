@@ -1,0 +1,262 @@
+<div class="faq-wrapper">
+  <div class="faq page-width">
+    
+    <header class="section-header">
+
+      {% if section.settings.header != blank %}
+      <h2 class="faq-header">{{ section.settings.header }}</h2>
+      {% endif %}
+
+      {% if section.settings.subheader != blank %}
+      <h4 class="faq-subheader">{{ section.settings.subheader }}</h4>
+      {% endif %}
+
+    </header>
+
+    <div class="faqAccordion">
+
+      {% for block in section.blocks %}
+        
+      {% if block.type == 'faq-header' %}
+      <h4 class="faq-subheader faq-block-subheader">{{ block.settings.faq_header }}</h4>
+      {% endif %}
+      
+      {% if block.type == 'faq' %}
+      <div class="faq-content">
+        <button class="faqButton">{{ block.settings.faq_question }}</button>
+        <div class="faqPanel">{{ block.settings.faq_answer }}</div>
+      </div>
+      {% endif %}
+        
+      {% endfor %}
+
+    </div>
+  </div>
+  
+</div>
+
+<script>
+
+  var acc = document.getElementsByClassName("faqButton");
+  var i;
+
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("faqActive");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+    });
+  }
+
+</script>
+
+<style>
+
+  .faq-header{
+    font-size: {{ section.settings.header_font_size }}px !important;
+    color: {{ section.settings.header_color }} !important;
+    text-align: {{ section.settings.text_align }} !important;
+    font-weight: bold !important;
+    margin: 10px auto 30px auto !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .faq-subheader{
+    font-size: {{ section.settings.subheader_font_size }}px !important;
+    color: {{ section.settings.subheader_color }} !important;
+    text-align: {{ section.settings.text_align }} !important;
+    display: block !important;
+    width: 100% !important;
+    font-weight: bold;
+    margin: 20px 0;
+  }
+  
+  .faq-block-subheader{
+  	text-align: {{ section.settings.text_align }} !important;
+  }
+
+  .faq-content {
+    border-bottom: 1px solid {{ section.settings.acc_border_color }}40 !important;
+  }
+
+  .faqButton {
+    background-color: {{ section.settings.acc_bg_color }} !important;
+    color: {{ section.settings.acc_text_color }} !important;
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    transition: 0.4s;
+  }
+
+  .faqActive, .faqButton:hover {
+    background-color: {{ section.settings.acc_bg_hover_color }} !important;
+  }
+
+  .faqPanel {
+    padding: 0 15px;
+    background-color: white;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+  }
+
+  .faqPanel p {
+    margin: 0;
+    padding: 10px 0;
+    line-height: 1.5;
+    font-size: 14px;
+    transition: .2s;
+    opacity: 1;
+}
+
+  .faqButton:after {
+    content: '+';
+    font-size: 18px;
+    color: {{ section.settings.acc_text_color }} !important;
+    float: right;
+    margin-left: 5px;
+    transition: .2s;
+  }
+
+  .faqButton.faqActive:after {
+    transform: rotate(45deg);
+    transition: .2s;
+  }
+
+</style>
+
+
+{% schema %}
+
+{
+  "name": "Faq",
+  "settings": [
+	{
+      "type": "header",
+      "content": "FAQ Header"
+    },
+    {
+      "type": "text",
+      "id": "header",
+      "label": "Header"
+    },
+	{
+      "type": "range",
+	  "id": "header_font_size",
+      "label": "Header Font Size",
+      "min": 14,
+      "max": 60,
+      "step": 1,
+      "default": 30
+    },
+	{
+      "type": "color",
+      "id": "header_color",
+      "label": "Header Color"
+    },
+    {
+      "type": "richtext",
+      "id": "subheader",
+      "label": "Subheader"
+    },
+    {
+      "type": "range",
+	  "id": "subheader_font_size",
+      "label": "Subheader Font Size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "default": 14
+    },
+	{
+      "type": "color",
+      "id": "subheader_color",
+      "label": "Subheader Color"
+    },
+    {
+	  "type": "select",
+      "id": "text_align",
+      "label": "Text Align",
+      "options": [
+        { "label": "Left", "value": "left" },
+        { "label": "Center", "value": "center" },
+        { "label": "Right", "value": "right" }
+      ],
+      "default": "left"
+    },
+	{
+      "type": "header",
+      "content": "Accordion"
+    },
+    {
+      "type": "color",
+      "id": "acc_bg_color",
+      "label": "Accordion Background Color"
+    },
+	{
+      "type": "color",
+      "id": "acc_bg_hover_color",
+      "label": "Accordion Background Hover Color"
+    },
+	{
+      "type": "color",
+      "id": "acc_text_color",
+      "label": "Accordion Text Color"
+    },
+	{
+      "type": "color",
+      "id": "acc_border_color",
+      "label": "Accordion Border Color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq-header",
+      "name": "Faq Header",
+      "limit": 12,
+	  "settings": [
+        {
+          "type": "text",
+          "id": "faq_header",
+          "label": "Faq Header",
+          "default": "Faq Header"
+        }
+      ]
+    },
+	{
+      "type": "faq",
+      "name": "Faq",
+      "limit": 12,
+	  "settings": [
+        {
+          "type": "text",
+          "id": "faq_question",
+          "label": "Faq Question",
+		  "default": "Faq Question"
+        },
+        {
+          "type": "richtext",
+          "id": "faq_answer",
+          "label": "Faq Answer",
+		  "default": "<p>Faq Answer</p>"
+        }
+      ]
+    }
+],
+"presets": [
+    {
+      "name": "Faq Section"
+    }
+  ]
+}
+
+{% endschema %}
